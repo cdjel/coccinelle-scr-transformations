@@ -13,7 +13,7 @@ https://coccinelle.gitlabpages.inria.fr/website/
     3. the transformation (-/+)
 
 ## What do you mean by SCR-aware? What is State-Compute Replication?
-- SCR-aware stands for State-Compute Replication Aware. What we mean by this is have programs have each core independently computing states when processing packets
+- SCR-aware stands for State-Compute Replication Aware. What we mean by this is to have programs have each core independently computing states when processing packets
 
 - State-Compute Replication is a technique that states that instead of cores sharing state, each core will update the state on its own, using packet history/fast-forwarding.
 
