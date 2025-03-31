@@ -73,14 +73,20 @@ src_ip = iph->saddr;
 
 ## How to apply a semantic patch
 - General format:
+```bash
 spatch --sp-file spatchfile.cocci program.c 
+```
 -  --> As seen above, we apply a spatch called spatchfile.cocci onto program.c
 
 - You can also apply a patch on a directory:
+```bash
 spatch --sp-file spatchfile.cocci --dir directory
-
+```
 - We can also output the transformation by:
+```bash
 spatch --sp-file spatchfile.cocci program.c -o output.c
-
+```
 - We could debug a failed transformation further by:
+```bash
 spatch --sp-file spatchfile.cocci program.c --debug 
+```
