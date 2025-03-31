@@ -47,11 +47,12 @@ sudo make install
 - A semantic patch (.cocci) can have many rules 
 - Coccinelle is context dependant. What that means is that we need to provide 
 - A rule can look like this:
+```
 @name_of_rule@
 @@
 - int var = 0
 + int var = 1
-
+```
 - As you can see above, the name of the rule can be anything but it needs to be without spaces. Rules don't need to have names.
 - --> Names of rules are necessary if you want to specify dependencies between rules (see below on advanced keywords)
 
