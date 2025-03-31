@@ -59,6 +59,7 @@ sudo make install
 ### Advanced Keywords
 - We can also specify keywords for rules
 - For example, we can have a rule execute only if another rule had succesfully executed. We use "depends on"
+```
 @num_meta@
 @@
 #define PORT_3 102
@@ -68,7 +69,7 @@ sudo make install
 @@
 src_ip = iph->saddr;
 + int index = cpu % NUM_META;
-
+```
 - --> Above: the second rule depends on the rule 'num_meta.' If num_meta is successful, then the second rule will execute.
 
 ## How to apply a semantic patch
