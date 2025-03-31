@@ -8,9 +8,9 @@ https://coccinelle.gitlabpages.inria.fr/website/
 
 - Coccinelle uses semantic patches, written in the Semantic Patch Language (SmPL)
 * -> Semantic patches have three main parts:
-* -> Rule name, metavariable
-* -> context/code patterns to match the code you are trying to transform/modify
-* ---> the transformation (-/+)
+    1. Rule name, metavariable
+    2. context/code patterns to match the code you are trying to transform/modify
+    3. the transformation (-/+)
 
 ## What do you mean by SCR-aware? What is State-Compute Replication?
 - SCR-aware stands for State-Compute Replication Aware. What we mean by this is have programs have each core independently computing states when processing packets
@@ -18,11 +18,12 @@ https://coccinelle.gitlabpages.inria.fr/website/
 - State-Compute Replication is a technique that states that instead of cores sharing state, each core will update the state on its own, using packet history/fast-forwarding.
 
 - What makes a program SCR-aware follows these three main concepts:
--> Per-core state (each core has own view of state)
--> per-packet metadata (helps update state on each core, needed for fast-forwarding)
--> fast-forwarding using packet history (lets each core "catch up" to the correct state)
+    1. Per-core state (each core has own view of state)
+    2. per-packet metadata (helps update state on each core, needed for fast-forwarding)
+    3. fast-forwarding using packet history (lets each core "catch up" to the correct state)
 
 - We are making SCR-aware transformations because eBPF programs can be written for single core execution or programs may use shared maps. So, we can create transformations where we can, for example, remove locks, replace shared state with per-core (i.e. BPF maps), etc.
+
 # Overview:
 
 
@@ -51,8 +52,8 @@ sudo make install
 - int var = 0
 + int var = 1
 
--> As you can see above, the name of the rule can be anything but it needs to be without spaces. Rules don't need to have names.
---> Names of rules are necessary if you want to specify dependencies between rules (see below on advanced keywords)
+- As you can see above, the name of the rule can be anything but it needs to be without spaces. Rules don't need to have names.
+- --> Names of rules are necessary if you want to specify dependencies between rules (see below on advanced keywords)
 
 
 ### Advanced Keywords
@@ -68,12 +69,12 @@ sudo make install
 src_ip = iph->saddr;
 + int index = cpu % NUM_META;
 
---> Above: the second rule depends on the rule 'num_meta.' If num_meta is successful, then the second rule will execute.
+- --> Above: the second rule depends on the rule 'num_meta.' If num_meta is successful, then the second rule will execute.
 
 ## How to apply a semantic patch
 - General format:
 spatch --sp-file spatchfile.cocci program.c 
---> As seen above, we apply a spatch called spatchfile.cocci onto program.c
+-  --> As seen above, we apply a spatch called spatchfile.cocci onto program.c
 
 - You can also apply a patch on a directory:
 spatch --sp-file spatchfile.cocci --dir directory
