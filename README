@@ -32,12 +32,14 @@ https://coccinelle.gitlabpages.inria.fr/website/
 - src/: example source files to transform
 
 # Installing and Using Coccinelle
+```bash
 git clone https://github.com/coccinelle/coccinelle.git
 cd coccinelle
 ./autogen
 ./configure
 make 
 sudo make install
+```
 
 
 ## Semantic Patch Language (SmPL)
