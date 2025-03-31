@@ -1,0 +1,29 @@
+# SCR-BPF Transformations
+
+This repo provides an overview on how to make eBPF programs SCR-aware using semantic patches with Coccinelle.
+
+## What is Coccinelle?
+
+## What do you mean by SCR-aware? What is State-Compute Replication?
+
+
+# Overview:
+
+
+# Structure of Repo
+- spatch/: examples of semantic patches (spatches)
+- mod/: examples of transformed programs (after a spatch was applied)
+- src/: example source files to transform
+
+# Installing and Using Coccinelle
+git clone 
+cd coccinelle
+./autogen
+./configure
+make 
+sudo make install
+
+## How to apply a semantic patch
+
+
+## Semantic Patch Language (SmPL)
