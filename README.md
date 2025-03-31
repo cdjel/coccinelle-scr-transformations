@@ -7,10 +7,10 @@ https://coccinelle.gitlabpages.inria.fr/website/
 - Coccinelle is a program matching and transformation engine 
 
 - Coccinelle uses semantic patches, written in the Semantic Patch Language (SmPL)
--> Semantic patches have three main parts:
----> Rule name, metavariable
----> context/code patterns to match the code you are trying to transform/modify
----> the transformation (-/+)
+* -> Semantic patches have three main parts:
+* -> Rule name, metavariable
+* -> context/code patterns to match the code you are trying to transform/modify
+* ---> the transformation (-/+)
 
 ## What do you mean by SCR-aware? What is State-Compute Replication?
 - SCR-aware stands for State-Compute Replication Aware. What we mean by this is have programs have each core independently computing states when processing packets
