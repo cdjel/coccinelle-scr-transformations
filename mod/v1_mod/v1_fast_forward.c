@@ -19,11 +19,13 @@ enum state {
 #define PORT_1 100
 #define PORT_2 101
 #define PORT_3 102
+#define NUM_META 10
 
 #define RET_ERR -1
 
 struct array_elem {
   u32 state;
+  struct bpf_spin_lock lock;
 };
 
 /*
@@ -36,6 +38,26 @@ struct {
   __type(value, struct array_elem);
   __uint(max_entries, 1024);
 } port_state SEC(".maps");
+
+void fast_forward_state(void *data, int index, u32 srcip)
+{
+  for(int j = 0;j < NUM_META;j++) {
+    int i = (index + j) % NUM_META; // Ring buffer 
+    struct metadata *meta = data + i * sizeof(struct metadata);
+    if (meta->l3proto != htons(ETH_P_IP) || meta->l4proto != IPPROTO_TCP)
+      continue;
+    struct array_elem *value = bpf_map_lookup_elem(&port_state, &srcip);
+    if (!value) {
+      struct array_elem init_state = {
+        .state = CLOSED_0
+        };
+      bpf_map_update_elem(&port_state, &srcip, &init_state, BPF_ANY);
+      value = &init_state;
+    }
+    value->state = get_new_state(value->state, meta->dport);
+    bpf_map_update_elem(&port_state, &srcip, value, BPF_ANY);
+  }
+}
 
 static inline u32 get_new_state(u32 state, u16 dport) {
   if (state == CLOSED_0 && dport == PORT_1) {
@@ -83,6 +105,9 @@ int xdp_prog(struct xdp_md *ctx) {
     return XDP_DROP;
   }
   src_ip = iph->saddr;
+  int cpu = bpf_get_smp_processor_id();
+  int index = cpu % NUM_META;
+  fast_forward_state(data, index, src_ip);
 
   nh_off += sizeof(*iph);
   /* Parse tcp header to get dst_port */
@@ -108,18 +133,19 @@ int xdp_prog(struct xdp_md *ctx) {
       bpf_map_update_elem(&port_state, &src_ip, &elem, BPF_NOEXIST);
     }
   } else {
+    bpf_spin_lock(&value->lock);
     value->state = get_new_state(value->state, dst_port);
     if (value->state == OPEN) {
       rc = XDP_PASS;
     }
+    bpf_spin_unlock(&value->lock);
     if (remove_session_table) {
       bpf_map_delete_elem(&port_state, &src_ip);
     }
   }
 
   /* For all valid packets, bounce them back to the packet generator. */
-  swap_src_dst_mac(data); // swaps the src and dst mac addresses in the ethernet header to look like a "reply" to the sender 
-  // (for simulated behavior to see if it gets sent back, not actually trying to deliver the packet to an app)
+  swap_src_dst_mac(data); 
   return XDP_TX;
 }
 

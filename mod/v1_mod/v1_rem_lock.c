@@ -24,7 +24,6 @@ enum state {
 
 struct array_elem {
   u32 state;
-  struct bpf_spin_lock lock;
 };
 
 /*
@@ -109,20 +108,17 @@ int xdp_prog(struct xdp_md *ctx) {
       bpf_map_update_elem(&port_state, &src_ip, &elem, BPF_NOEXIST);
     }
   } else {
-    bpf_spin_lock(&value->lock);
     value->state = get_new_state(value->state, dst_port);
     if (value->state == OPEN) {
       rc = XDP_PASS;
     }
-    bpf_spin_unlock(&value->lock);
     if (remove_session_table) {
       bpf_map_delete_elem(&port_state, &src_ip);
     }
   }
 
   /* For all valid packets, bounce them back to the packet generator. */
-  swap_src_dst_mac(data); // swaps the src and dst mac addresses in the ethernet header to look like a "reply" to the sender 
-  // (for simulated behavior to see if it gets sent back, not actually trying to deliver the packet to an app)
+  swap_src_dst_mac(data); 
   return XDP_TX;
 }
 

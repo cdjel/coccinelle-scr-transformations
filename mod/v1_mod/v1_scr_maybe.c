@@ -148,8 +148,7 @@ int xdp_prog(struct xdp_md *ctx) {
   }
 
   /* For all valid packets, bounce them back to the packet generator. */
-  swap_src_dst_mac(data); // swaps the src and dst mac addresses in the ethernet header to look like a "reply" to the sender 
-  // (for simulated behavior to see if it gets sent back, not actually trying to deliver the packet to an app)
+  swap_src_dst_mac(data); 
   return XDP_TX;
 }
 
