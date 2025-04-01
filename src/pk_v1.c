@@ -37,7 +37,6 @@ struct {
   __type(value, struct array_elem);
   __uint(max_entries, 1024);
 } port_state SEC(".maps");
-
 static inline u32 get_new_state(u32 state, u16 dport) {
   if (state == CLOSED_0 && dport == PORT_1) {
     state = CLOSED_1;

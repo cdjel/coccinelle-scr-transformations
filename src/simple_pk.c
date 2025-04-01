@@ -28,6 +28,10 @@ struct packet {
     struct iphdr ip4;
     struct tcphdr tp;
 }
+/*
+ * key: state_id (global state)
+ * value: state
+ */
 struct {
     __uint(type, BPF_MAP_TYPE_ARRAY);
     __type(key, u32);

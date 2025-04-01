@@ -6,8 +6,11 @@ expression E;
 - bpf_spin_unlock(E);
 
 @@
+metavariable name;
 @@
-struct array_elem {
+struct name {
     ...
 - struct bpf_spin_lock lock;
 };
+
+
