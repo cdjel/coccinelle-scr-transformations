@@ -2,10 +2,21 @@
 expression E;
 attribute name SEC;
 @@
+(
 - bpf_spin_lock(E);
 ...
 - bpf_spin_unlock(E);
-
+|
+    if (...){
+        ...
+    } else {
+        ...
+-       bpf_spin_lock(E);
+        ...
+-       bpf_spin_unlock(E);
+    ...
+    }
+)
 @@
 metavariable name;
 @@
