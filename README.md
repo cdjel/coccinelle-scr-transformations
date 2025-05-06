@@ -145,3 +145,5 @@ spatch --sp-file spatchfile.cocci program.c -o output.c
 ```bash
 spatch --sp-file spatchfile.cocci program.c --debug 
 ```
+## Installation
+- 
