@@ -146,4 +146,4 @@ spatch --sp-file spatchfile.cocci program.c -o output.c
 spatch --sp-file spatchfile.cocci program.c --debug 
 ```
 ## Installation
-- 
+- Can use the example .sh for installation. (3 steps: ex. install_server 1). 
