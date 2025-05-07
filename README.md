@@ -1,6 +1,6 @@
 # SCR-BPF Transformations
 
-This repo provides an overview on how to make eBPF programs SCR-aware using semantic patches with Coccinelle.
+This repo provides an overview on how one could create semantic patches with Coccinelle to apply SCR-aware transformations to eBPF programs.
 
 ## What is Coccinelle?
 https://coccinelle.gitlabpages.inria.fr/website/ 
