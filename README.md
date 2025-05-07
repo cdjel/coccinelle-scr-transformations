@@ -19,20 +19,35 @@ https://coccinelle.gitlabpages.inria.fr/website/
 
 - What makes a program SCR-aware follows these three main concepts:
     1. Per-core state (each core has own view of state)
+    - ---> This replication allows cores to work independently. This helps to avoid contention/delays caused by waiting for other cores to access shared state. 
     2. per-packet metadata (helps update state on each core, needed for fast-forwarding)
+    - ---> Track details about each packets. Each core has its own metadata for the packets it is processing, so it can keep track of them. Before a core processes a new packet, it uses the metadta to make sure it has the correct and up-to-date state. 
     3. fast-forwarding using packet history (lets each core "catch up" to the correct state)
+    - ---> A process that plays the effects of previous packets, such as any updates that might have happened before it processes a new packet. 
+
 
 - We are making SCR-aware transformations because eBPF programs can be written for single core execution or programs may use shared maps. So, we can create transformations where we can, for example, remove locks, replace shared state with per-core (i.e. BPF maps), etc.
 
 # Overview:
+- This repo is to showcase the exploration of some transformations; it is how we may use Coccinelle and its semantic patches in order to transform a program. 
+- The key idea of using semantic patches is to be able to automate transformations without having to manually rewrite every program. However, we may still need to adjust these spatches as needed as not every program is structured the same way or they may differ in how state is handled
+- The goal was to take programs and apply transformations to make it SCR-aware. 
+- In this repo, some transformations may still need to be refined in order to make a fully-realized SCR-aware program, as the generated outputs you would see in the MOD dir demonstrate different stages of applying transformations, and though we may generate outputs with all spatches applied, one future direction is to be able to verify if SCR-aware is realized. 
 
+## Challenges & Limitations:
+- A single set of spatches doesn't always work for every programs (not a "one size fits all" solution). To write reusable patches, we need to deeply understand the patterns and structures of a program, as different programs can vary in things like structure and stage management. Even with generalized spatches, we may need to adjust them accordingly. 
 
-# Structure of Repo
+## Future Directions
+- Could focus on applying transformations for more complex programs (such as ones with more complicated state management)
+- ---> apply all spatches to make a fully realized SCR-aware program
+- Another area of improvement is to not only test these transformed programs to see that they work correctly and as expected after the changes are made, but also to perhaps automate that testing
+
+## Structure of Repo
 - spatch/: examples of semantic patches (spatches)
 - mod/: examples of transformed programs (after a spatch was applied)
 - src/: example source files to transform
 
-# Installing and Using Coccinelle
+## Installing and Using Coccinelle
 ```bash
 git clone https://github.com/coccinelle/coccinelle.git
 cd coccinelle
@@ -41,7 +56,6 @@ cd coccinelle
 make 
 sudo make install
 ```
-
 
 ## Semantic Patch Language (SmPL)
 - A semantic patch (.cocci) can have many rules 
@@ -125,6 +139,7 @@ src_ip = iph->saddr;
 
   
 - These are only some parts of the SMPL grammar. For more information, check out the official Coccinelle repo/documentation.
+https://github.com/coccinelle 
   
 ## How to apply a semantic patch
 - General format:
@@ -146,4 +161,4 @@ spatch --sp-file spatchfile.cocci program.c -o output.c
 spatch --sp-file spatchfile.cocci program.c --debug 
 ```
 ## Installation
-- Can use the example .sh for installation. (3 steps: ex. install_server 1). 
+- Can use the example .sh for installation. (3 steps: ex. install_server 1 ). 

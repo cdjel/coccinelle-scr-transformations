@@ -1,4 +1,4 @@
-@replacement3@
+@replacement5@
 attribute name SEC;
 declarer name __uint;
 @@

@@ -7,10 +7,16 @@ metavariable map_name;
    __uint(...);
    ...
  } map_name SEC(".maps");
+
 + struct metadata {
-+   u32 l3proto;
-+   u32 l4proto;
-+   u16 srcip;
-+   u16 dport;
++   int l3proto;
++   int l4proto;
++   u32 srcip;
++   u32 dstip;
++   u16 src_port;
++   u16 dst_port;
 +   u8 protocol;
++   u64 last_time;
 + }; 
+
+ 

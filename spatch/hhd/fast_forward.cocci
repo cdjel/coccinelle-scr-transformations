@@ -22,11 +22,11 @@ struct {
 +            continue;
 +        u64 *value = bpf_map_lookup_elem(&map_name, key);
 +        if (!value) {
-+            u64 bytes = meta->packet_length
-+            bpf_map_update_elem(&map_name, key, &bytes, BPF_ANY);
++            u64 new_value = meta->packet_length;
++            bpf_map_update_elem(&map_name, key, &new_value, BPF_ANY);
 +        }
-+        u64 new_bytes = *value + meta->packet_length;
-+        bpf_map_update_elem(&map_name, key, &new_bytes, BPF_ANY);
++        *value += meta->packet_length;
++        bpf_map_update_elem(&map_name, key, value, BPF_ANY);
 +    }
 + }
 

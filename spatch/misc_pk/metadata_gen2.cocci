@@ -1,6 +1,6 @@
 @header_exists@
 @@
-#include <bpf/bpf_helpersss.h>
+#include <bpf/bpf_helpers.h>
 
 @depends on header_exists@
 @@

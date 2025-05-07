@@ -1,4 +1,4 @@
-@replacement4@
+@replacement6@
 attribute name SEC;
 declarer name __uint;
 constant char[] maps;

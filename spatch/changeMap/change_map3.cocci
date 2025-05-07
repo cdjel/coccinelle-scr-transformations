@@ -1,4 +1,4 @@
-@replacement2@
+@replacement3@
 attribute name SEC;
 declarer name __uint;
 constant char[] text;
