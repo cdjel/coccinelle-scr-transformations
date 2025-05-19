@@ -8,7 +8,7 @@
 #include <linux/tcp.h>
 #include <bpf/bpf_helpers.h>
 // #include "xdp_utils.h"
-// single cpu core 
+
 enum state {
     CLOSED_0 = 0,
     CLOSED_1,
@@ -19,6 +19,7 @@ enum state {
 #define PORT_1 100
 #define PORT_2 101
 #define PORT_3 102
+#define NUM_META 10
 
 struct array_elem {
     u32 state;
@@ -38,6 +39,26 @@ struct {
     __type(value, struct array_elem);
     __uint(max_entries, 1);
 } port_state SEC(".maps");
+
+void fast_forward_state(void *data, int index, u32 srcip)
+{
+    for(int j = 0;j < NUM_META;j++) {
+        int i = (index + j) % NUM_META; // Ring buffer 
+        struct metadata *meta = data + i * sizeof(struct metadata);
+        if (meta->l3proto != htons(ETH_P_IP) || meta->l4proto != IPPROTO_TCP)
+            continue;
+        struct array_elem *value = bpf_map_lookup_elem(&port_state, &srcip);
+        if (!value) {
+            struct array_elem init_state = {
+                .state = CLOSED_0
+                };
+            bpf_map_update_elem(&port_state, &srcip, &init_state, BPF_ANY);
+            continue;
+        }
+        value->state = get_new_state(value->state, meta->dport);
+        bpf_map_update_elem(&port_state, &srcip, value, BPF_ANY);
+    }
+}
 //removed helper functions for ipv4 & udp
 SEC("xdp_portknock")
 int xdp_prog(struct xdp_md *ctx) {

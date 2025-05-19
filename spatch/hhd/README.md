@@ -27,5 +27,8 @@
 - NOTE: the final transformed scr-aware version of hhd_v1.c is still ongoing. Due to variable mismatches / partially applied SCR features, some transformations are not completely aligned yet. 
 - ---> Therefore, these spatches and outputs are part of an ongoing exploration of using Coccinelle. 
 
-
-
+### Order / Limitations
+- applied gen_change_map_atomics.cocci, metadata.cocci, fast_forward.cocci
+- Limitations:
+- --> no bpf map is defined for metadata / ringbuffer 
+- --> currently does two separate updates per packet (after fast_forward_state, main code still adds current packet's byte count) -> needs to be revised so that all byte count updates happen in once place (no duplicates)

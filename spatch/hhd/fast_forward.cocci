@@ -1,12 +1,12 @@
 @num_meta@
 @@
-#define PORT_3 102
+#define MAX_NUM_FLOWS 1024
 + #define NUM_META 10
 
 @depends on num_meta@
 attribute name SEC;
 declarer name __uint;
-metavariable map_name, elem;
+identifier map_name;
 @@
 struct {
     __uint(...);
@@ -32,7 +32,7 @@ struct {
 
 
 @depends on num_meta@
-metavariable flow, map, data;
+metavariable flow, map;
 @@
 + int cpu = bpf_get_smp_processor_id();
 + int index = cpu % NUM_META;

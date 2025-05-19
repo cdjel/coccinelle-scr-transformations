@@ -23,30 +23,21 @@ enum state {
 struct array_elem {
     u32 state;
 };
-
-static inline u32 get_new_state(u32 state, u16 dport)
-{
-    if (state == CLOSED_0 && dport == PORT_1) {
-        state = CLOSED_1;
-    }
-    else
-        if (state == CLOSED_1 && dport == PORT_2) {
-            state = CLOSED_2;
-        }
-    else
-        if (state == CLOSED_2 && dport == PORT_3) {
-            state = OPEN;
-        }
-    else {
-        state = CLOSED_0;
-    }
-    return state;
-}
+struct metadata {
+    int l3proto;
+    int l4proto;
+    u32 srcip;
+    u16 dport;
+};
 struct packet {
     struct ethhdr eth;
     struct iphdr ip4;
     struct tcphdr tp;
 }
+/*
+ * key: state_id (global state)
+ * value: state
+ */
 struct {
     __uint(type, BPF_MAP_TYPE_ARRAY);
     __type(key, u32);
@@ -82,6 +73,16 @@ int xdp_prog(struct xdp_md *ctx) {
     if (value->state == OPEN){
         rc = XDP_PASS;
     } 
+    // state transition 
+    if (value->state == CLOSED_0 && dport == PORT_1) {
+        value->state = CLOSED_1;
+    } else if (value->state == CLOSED_1 && dport == PORT_2) {
+        value->state = CLOSED_2;
+    } else if (value->state == CLOSED_2 && dport == PORT_3) {
+        value->state = OPEN;
+    } else {
+        value->state = CLOSED_0; 
+    }
 
     return rc; // was XDP_TX;
 }

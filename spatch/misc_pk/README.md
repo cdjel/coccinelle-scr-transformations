@@ -23,9 +23,9 @@
 
 4. fast_forward.cocci: adds the fast-forwarding function to help catch-up state with the effects of previous packets that may have been missed, using that metadata history. 
 
-5. state_transition: non-SCR-aware related. Just transfers the state transition logic (into a helper function / restructuring).
+5. remove_spin_lock.cocci: removes spin locks both in struct and calls in code (follows format of lock & unlock). 
 
-6. remove_spin_lock.cocci: removes spin locks both in struct and calls in code (follows format of lock & unlock). 
+6. state_transition: non-SCR-aware related. Just transfers the state transition logic (into a helper function / restructuring).
 
 ### MOD (generated output files) from mod/pk_v1_mod & mod/simplified_pk_mod:
 - From simple_pk.c:
@@ -40,4 +40,15 @@
 - ---> Therefore, these spatches and outputs are part of an ongoing exploration of using Coccinelle. 
 
 
+### Order & Limitations 
+- The final generated output (with transformations applied) may still need revision.
 
+simple_pk.c: applied change_map.cocci -> metadata.cocci -> fast_forward.cocci
+- --> Single cpu core program
+- Limitations:
+- --> no bpf map is defined for metadata / ringbuffer 
+- --> currently keyed to a constant, but needs to be expanded for other files (ex. per-flow state)
+
+pk_v1.c: applied revised_change_map_locks.cocci, metadata.cocci, state_transition.cocci, fast_forward.cocci
+- Limitations:
+- --> no bpf map is defined for metadata / ringbuffer 

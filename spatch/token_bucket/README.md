@@ -29,3 +29,8 @@
 - ---> Therefore, these spatches and outputs are part of an ongoing exploration of using Coccinelle. 
 
 
+### Order / Limitations
+- applied revised_change_map.cocci, metadata.cocci, fast_forward.cocci
+- Limitations:
+- --> no bpf map is defined for metadata / ringbuffer 
+- --> Incorrect token logic (currently updating the token count twice: in fast_forward_state and main code) -> needs to be revised so that updates happen in once place (no duplicates)
