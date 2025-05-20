@@ -59,7 +59,7 @@ sudo make install
 
 ## Semantic Patch Language (SmPL)
 - A semantic patch (.cocci) can have many rules 
-- Coccinelle is context dependant. What that means is that we need to provide 
+- Coccinelle needs context. Aside from anchors, we need to explicitly declare any custom macros, attributes, etc.
 - A rule can look like this:
 ```
 @name_of_rule@
